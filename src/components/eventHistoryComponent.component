@@ -1,6 +1,4 @@
-<apex:component>
+<apex:component >
 
     <apex:attribute name="opphistoryList" description="list of upcoming opps" type="Opportunity[]"/>
-
-
 </apex:component>

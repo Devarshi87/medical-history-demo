@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c24f4a53-5d61-4151-b06a-21b28ee669f6" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/src/classes/AppointmentBookingController.cls" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/AppointmentBookingController.cls" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/eventHistoryComponent.component" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eventHistoryComponent.component" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/AppointmentBooking.page" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AppointmentBooking.page" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

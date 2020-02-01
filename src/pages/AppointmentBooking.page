@@ -76,7 +76,7 @@
                         </apex:outputPanel>
 
                         <apex:outputPanel id="patient-history">
-                            
+
                         </apex:outputPanel>
                         
                         <apex:outputPanel id="product-panel">
@@ -169,7 +169,7 @@
                                                                             </p>
                                                                         </div>
                                                                     </article>
-                                                        <apex:commandButton value="Send Calendar Invites" onclick="sendcalendarinvite();" rerender="event-panel" styleclass="app-btn slds-button slds-button_brand" status="statusCal"/>
+                                                        <apex:commandButton value="Send Calendar Invites" onclick="sendcalendarinvite();" styleclass="app-btn slds-button slds-button_brand" status="statusCal"/>
 
 <!--                                                            </ul>-->
                                                             <!--                            <apex:outputField value="{!EventObj.Subject}"/>-->
@@ -184,7 +184,7 @@
 
                                         </div>
 
-                                    <apex:actionFunction name="sendcalendarinvite" action="{!sendCalendarInvite}" rerender="event-panel" status="statusCal"/>
+                                    <apex:actionFunction name="sendcalendarinvite" action="{!sendCalendarInvite}" rerender="" status="statusCal"/>
                                     <apex:actionFunction name="rerenderCalendarFunction" reRender="calendarPanel,event-panel" status="statusCal">
                                         <apex:param name="createdEventId" value=""/>
                                     </apex:actionFunction>
