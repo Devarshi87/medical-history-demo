@@ -1,0 +1,17 @@
+<apex:page showHeader="false" standardStylesheets="false">
+
+    <html>
+    <body >
+    <center>
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <lottie-player
+                src="https://assets2.lottiefiles.com/temp/lf20_yYJhpG.json"  background="transparent"  speed="1"  style="width: 500px; height: 500px;"  loop="true"   autoplay="true"  >
+        </lottie-player>
+        <div style="font-size: 30px; padding:3%;"> You are not allowed to register an unauthorized email address to Medical Clinic App.</div>
+    </center>
+
+
+    </body>
+    </html>
+
+</apex:page>

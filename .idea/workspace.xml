@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c24f4a53-5d61-4151-b06a-21b28ee669f6" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/classes/AppointmentBookingController.cls" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/AppointmentBookingController.cls" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/eventHistoryComponent.component" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/eventHistoryComponent.component" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/AppointmentBooking.page" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/AppointmentBooking.page" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Lightning" />
+        <option value="Lightning.cmp-meta" />
+        <option value="ApexClass" />
+        <option value="ApexClass.cls-meta" />
+        <option value="ApexPage" />
+        <option value="ApexPage.page-meta" />
+        <option value="ApexComponent" />
+        <option value="ApexComponent.component-meta" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1X9b9ezpAVK75kxANONTm0xOT5N" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="UseStandardLocationKey" value="true" />
+    <property name="settings.editor.selected.configurable" value="settings.account" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SFUnavailableTypes">
+    <types>
+      <type value="Translations" />
+      <type value="CommunityTemplateDefinition" />
+      <type value="Portal" />
+      <type value="Network" />
+      <type value="CommunityThemeDefinition" />
+    </types>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c24f4a53-5d61-4151-b06a-21b28ee669f6" name="Default Changelist" comment="" />
+      <created>1580461107731</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1580461107731</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="Apex">
+          <url>file://$PROJECT_DIR$/src/classes/GoogleCalendarActionsController.cls</url>
+          <line>35</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

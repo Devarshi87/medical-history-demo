@@ -1,0 +1,5 @@
+<apex:component >
+    
+    <apex:attribute name="eventObj" description="scheduled event for the patient" type="Event" required="true"/>
+    
+</apex:component>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EmailTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
+    <available>true</available>
+    <encodingKey>ISO-8859-1</encodingKey>
+    <name>CalendarAuthorizationEmail</name>
+    <style>none</style>
+    <subject>Medical Clinic: Authorize us to create Events in your calendar</subject>
+    <textOnly>WELCOME
+Great to have you
+Hey {!Contact.FirstName}, Its great to have you onboard with Medical Clinic. Now you can easily get your patient appointments right your google calendar.
+Please click the button below to authorize the Medical Clinic app to create events in your calendar.
+
+Authorize Calendar:  {!Contact.AuthorizationLink__c}</textOnly>
+    <type>custom</type>
+    <uiType>Aloha</uiType>
+</EmailTemplate>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value>Pet</value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value>Pets</value>
+    </caseValues>
+    <fields>
+        <label><!-- Current Owner --></label>
+        <name>Current_Owner__c</name>
+        <relationshipLabel><!-- Pets --></relationshipLabel>
+    </fields>
+    <fields>
+        <label><!-- Description --></label>
+        <name>Description__c</name>
+    </fields>
+    <fields>
+        <label><!-- Status --></label>
+        <name>Status__c</name>
+    </fields>
+    <fields>
+        <label><!-- Times Adopted --></label>
+        <name>Times_Adopted__c</name>
+    </fields>
+    <startsWith>Consonant</startsWith>
+</CustomObjectTranslation>

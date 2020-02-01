@@ -1,0 +1,61 @@
+<apex:component >
+    
+    <apex:attribute name="newPatient" description="patient for appointment" type="Patient__c" />
+    
+    
+            
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col">
+                    <span>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="patient-name">Patient Name</label>
+                            <div class="slds-form-element__control">
+                                <apex:outputField value="{!newPatient.Name}" rendered="{!newPatient.id != null}"/>
+                                <apex:inputField id="patient-name" value="{!newPatient.Name}" label="Patient Name" html-placeholder="Patient Name"  rendered="{!newPatient.id == null}"/>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+                
+                <div class="slds-col" style="padding-right: 35px;">
+                    <span>
+                        <div class="slds-form-element">
+                            <label class="slds-form-element__label" for="patient-email">Patient Email</label>
+                            <div class="slds-form-element__control">
+                                <apex:outputField value="{!newPatient.Patient_Email__c}" rendered="{!newPatient.id != null}"/>
+                                <apex:inputField id="patient-email" value="{!newPatient.Patient_Email__c}" html-placeholder="Patient Email"  rendered="{!newPatient.id == null}"/>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+            
+            <div class="slds-grid slds-wrap">
+                <div class="slds-col">
+                    <span>
+                        <div class="slds-form-element" >
+                            <label class="slds-form-element__label" for="patient-phone">Patient Phone</label>
+                            <div class="slds-form-element__control">
+                                <apex:outputField value="{!newPatient.Patient_Phone__c}" rendered="{!newPatient.id != null}"/>
+                                <apex:inputField id="patient-phone" value="{!newPatient.Patient_Phone__c}" html-placeholder="Patient Phone" rendered="{!newPatient.id == null}"/>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+                
+                <!--<div class="slds-col">
+                    <span>
+                        <div class="slds-form-element" >
+                            <label class="slds-form-element__label" for="appoint-date">Appointment Date</label>
+                            <div class="slds-form-element__control" >
+                                <apex:outputField value="{!newPatient.closeDate}" rendered="{!newPatient.id != null}"/>
+                                <apex:inputField id="appoint-date" value="{!newPatient.closeDate}" html-placeholder="Appointment Date"   style="width: 54%;" rendered="{!newPatient.id == null}"/>
+                            </div>
+                        </div>
+                    </span>
+                </div>-->
+            </div>
+            
+       
+    
+</apex:component>

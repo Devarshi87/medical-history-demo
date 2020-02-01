@@ -1,0 +1,241 @@
+<apex:page lightningStylesheets="true" controller="AppointmentBookingController" showHeader="false">
+    <apex:slds />
+    
+    <style>
+        .app-btn{
+        top: 10px;
+        bottom: 10px;
+        width: 100%;
+        
+        }
+    </style>
+    
+    <script>
+    function updatePrice(){
+        console.log('14564654' );
+        rerenderPrice();
+    }
+    </script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <div class="slds-scope">
+        
+        <apex:form >
+            <div class="medical-app">
+                
+                <div class="slds-grid slds-wrap">
+                    <!--left Panel-->
+                    <div class="slds-col slds-small-size--1-of-2">
+                        <apex:actionFunction name="selectMode" reRender="select-mode" status="statusCal">
+                            <apex:param name="mode" assignTo="{!patientType}" value=""/>
+                        </apex:actionFunction>
+                        <apex:outputPanel id="select-mode">
+                            <apex:outputPanel rendered="{!if(patientType == 'none',true,false)}">
+                                <div class="slds-box slds-m-around--x-small" rendered="{!if(patientType == 'none','true','false')}">
+                                    
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-small-size--1-of-2">
+                                            <div class="slds-box slds-m-around--x-small slds-align_absolute-center" onclick="selectMode('existing');">
+                                                Existing
+                                            </div>
+                                        </div>
+                                        <div class="slds-col slds-small-size--1-of-2">
+                                            <div class="slds-box slds-m-around--x-small slds-align_absolute-center" onclick="selectMode('new');">
+                                                New
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </apex:outputPanel>
+                            <apex:outputPanel rendered="{!if(patientType == 'new',true,false)}">
+                                <div class="slds-box slds-m-around--x-small">
+                                    
+                                    <c:newAppointmentPatientComp newPatient="{!newPatientObj}" id="patient-info"/>
+                                    <apex:commandButton value="Save" action="{!saveAction}" styleclass="app-btn slds-button slds-button_brand" rerender="select-mode,patient-info,product-panel" status="statusCal"/>
+                                    
+                                </div>
+                            </apex:outputPanel>
+                            
+                            <apex:outputPanel rendered="{!if(patientType == 'existing',true,false)}">
+                                <div class="slds-box slds-m-around--x-small">
+                                    
+                                    <span>
+                                        <div class="slds-form-element">
+                                            <label class="slds-form-element__label" for="patient-email">Patient Email</label>
+                                            <div class="slds-form-element__control">
+                                                <div class="slds-align_absolute-center">
+                                                    <apex:inputText value="{!searchEmailString}" html-placeholder="Enter Patient Email" styleclass="slds-input"/>
+                                                </div>  
+                                                <apex:commandButton value="Search Patient" action="{!searchPatient}" styleclass="app-btn slds-button slds-button_brand" rerender="select-mode,patient-info,product-panel" status="statusCal"/>
+                                                
+                                            </div>
+                                        </div>
+                                    </span>
+                                    
+                                </div>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+
+                        <apex:outputPanel id="patient-history">
+
+                        </apex:outputPanel>
+                        
+                        <apex:outputPanel id="product-panel">
+                            
+                            <apex:outputPanel rendered="{!newPatientObj.id !=null}">
+                                <div class="slds-box slds-m-around--x-small">
+                                    <div class="slds-grid slds-wrap">
+                                        <div class="slds-col slds-small-size--1-of-2">
+                                            <div class="slds-box slds-m-around--x-small">
+                                                <apex:outputPanel >
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-select_container">
+                                                            <apex:selectList value="{!serviceSelected}" multiselect="false" size="1" styleclass="slds-select" >
+                                                                <apex:selectOptions value="{!ProductList}" />
+                                                                <apex:actionSupport event="onchange" rerender="servicePrice,product-panel" action="{!addProductService}" status="statusCal"/>
+                                                            </apex:selectList>
+                                                        </div> 
+                                                    </div>
+                                                    <apex:actionFunction name="rerenderPrice"  rerender="servicePrice,product-panel" status="statusCal"/>
+                                                </apex:outputPanel>
+                                            </div>
+                                        </div>
+                                        <div class="slds-col slds-small-size--1-of-2"  >
+                                            <div class="slds-box slds-m-around--x-small slds-align_absolute-center">
+                                                <apex:outputPanel id="servicePrice">
+
+                                                    <apex:outputText value="{0, number, currency}" style="font-weight: 600;font-size: 22px;">
+                                                        <apex:param value="{!ProductObj}" />
+                                                    </apex:outputText>
+
+                                                </apex:outputPanel>
+                                            </div>
+                                        </div>
+                                    </div>
+<!--                                    <apex:commandButton value="Create New Appointment" action="{!addProductService}" styleclass="app-btn slds-button slds-button_brand" rerender="product-panel"/>-->
+
+                                    <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-small-size--1-of-2">
+                                                <div class="slds-box slds-m-around--x-small">
+<!--                                                    <span>-->
+<!--                                                        <div class="slds-form-element">-->
+<!--                                                            <label class="slds-form-element__label" for="physician-name">Select Physician</label>-->
+<!--                                                            <div class="slds-form-element__control">-->
+<!--                                                                <apex:inputField id="physician-name" value="{!newOppObj.Assigned_Physician__c}" label="Assigned Physician" html-placeholder="Assigned Physician" onchange="updatePhysician();"/>-->
+<!--                                                            </div>-->
+<!--                                                        </div>-->
+<!--                                                    </span>-->
+
+                                                    <div class="slds-form-element__control">
+                                                        <div class="slds-select_container">
+                                                            <apex:selectList value="{!selectedPhysician}" multiselect="false" size="1" styleclass="slds-select" >
+                                                                <apex:selectOptions value="{!PhysicianList}" />
+                                                                <apex:actionSupport event="onchange"  action="{!updateOpp}" rerender="product-panel,calendarPanel" status="statusCal"/>
+                                                            </apex:selectList>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="slds-col slds-small-size--1-of-2">
+
+
+                                                    <apex:outputPanel id="event-panel">
+                                                        <apex:outputPanel rendered="{!EventObj.id !=null}">
+                                                            <apex:pageMessages />
+                                                            <div class="slds-box slds-m-around--x-small">
+<!--                                                            <ul class="slds-has-dividers_around-space slds-m-around&#45;&#45;x-small">-->
+
+                                                                    <article class="slds-tile slds-tile_board">
+                                                                        <h3 class="slds-tile__title slds-truncate" title="{!EventObj.Subject}">
+                                                                            <a href="javascript:void(0);">Subject: &nbsp;&nbsp;{!EventObj.Subject}</a>
+                                                                        </h3>
+                                                                        <div class="slds-tile__detail">
+                                                                            <p class="slds-text-heading_medium" title="Start">Start: &nbsp;&nbsp;
+                                                                                <apex:outputText value="{0, date,EEE, d MMM yyyy hh:mm aaa}">
+                                                                                    <apex:param value="{!EventObj.StartDateTime}" />
+                                                                                </apex:outputText>
+<!--                                                                                <apex:outputField value="{!EventObj.StartDateTime}"/>-->
+                                                                            </p>
+                                                                            <p class="slds-truncate" title="Physician">
+                                                                                Physician: &nbsp;&nbsp;   <apex:outputField value="{!EventObj.WhoId}"/>
+                                                                            </p>
+                                                                            <p class="slds-truncate" title="Patient">
+                                                                                Patient: &nbsp;&nbsp;  <apex:outputField value="{!EventObj.WhatId}"/>
+                                                                            </p>
+                                                                            <p class="slds-truncate" title="End">End: &nbsp;&nbsp;
+                                                                                <apex:outputText value="{0, date, EEE, d MMM yyyy hh:mm aaa}">
+                                                                                    <apex:param value="{!EventObj.EndDateTime}" />
+                                                                                </apex:outputText>
+<!--                                                                                <apex:outputField value="{!EventObj.EndDateTime}"/>-->
+                                                                            </p>
+                                                                        </div>
+                                                                    </article>
+                                                        <apex:commandButton value="Send Calendar Invites" onclick="sendcalendarinvite();" rerender="event-panel" styleclass="app-btn slds-button slds-button_brand" status="statusCal"/>
+
+<!--                                                            </ul>-->
+                                                            <!--                            <apex:outputField value="{!EventObj.Subject}"/>-->
+                                                            <!--                            <apex:outputField value="{!EventObj.StartDateTime}"/>-->
+                                                            <!--                            <apex:outputField value="{!EventObj.EndDateTime}"/>-->
+                                                            <!--                            <apex:outputField value="{!EventObj.WhoId}"/>-->
+                                                            <!--                            <apex:outputField value="{!EventObj.WhatId}"/>-->
+                                                            </div>
+                                                        </apex:outputPanel>
+                                                    </apex:outputPanel>
+                                                </div>
+
+                                        </div>
+
+                                    <apex:actionFunction name="sendcalendarinvite" action="{!sendCalendarInvite}" rerender="event-panel" status="statusCal"/>
+                                    <apex:actionFunction name="rerenderCalendarFunction" reRender="calendarPanel,event-panel" status="statusCal">
+                                        <apex:param name="createdEventId" value=""/>
+                                    </apex:actionFunction>
+                                    
+                                    <apex:actionFunction name="updatePhysician" rerender="product-panel,calendarPanel" status="statusCal"/>
+<!--                                    {!newOppObj.Assigned_Physician__c}-->
+                                </div>
+                            </apex:outputPanel>
+                            
+                        </apex:outputPanel>
+
+
+                    </div>
+                    <!--left Panel end-->
+                    
+                    <!-- right panel start-->
+                    <div class="slds-col slds-small-size--1-of-2">
+                        <div class="slds-box slds-m-around--x-small">
+
+                            <apex:outputPanel id="calendarPanel">
+                                <div style="font-size: 18px;test-align:center;">
+                                    <apex:outputField value="{!newOppObj.Assigned_Physician__c}"/> &nbsp;&nbsp; Calendar Schedule
+                                </div>
+                                <c:checkCalendarScheduleComp whatid="{!newPatientObj.id}" whoid="{!newOppObj.Assigned_Physician__c}" subject="Appointment for {!newPatientObj.Name }"/>
+                            </apex:outputPanel>
+                            
+                        </div>
+                    </div>
+                    <!-- right panel-->
+
+
+                    
+                </div>
+            </div>
+
+            <apex:actionstatus id="statusCal">
+                <apex:facet name="start">
+                    <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb; height:100%;opacity:0.65;width:100%;">
+                        <div class="waitingHolder" style="top: 100px; width: 91px;">
+
+                            <lottie-player
+                                    src="https://assets4.lottiefiles.com/datafiles/nT4vnUFY9yay7QI/data.json"  background="transparent"  speed="1"  style="width: 300px; height: 300px;"  loop="true"  autoplay="true" >
+                            </lottie-player>
+                        </div>
+                    </div>
+                </apex:facet>
+            </apex:actionstatus>
+        </apex:form>
+        
+        
+        
+        
+    </div>
+</apex:page>
