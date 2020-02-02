@@ -72,15 +72,13 @@ public class CalendarScheduleController {
 
          if(!String.isBlank(eventId)){
              newEvent = new Event();
-             newEvent = [Select Id,StartDateTime,EndDateTime,Google_Cal_Event_Id__c,Whoid,Whatid,Subject,Status__c from  Event where id = : eventId];
+             newEvent = [Select Id,StartDateTime,EndDateTime,Google_Cal_Event_Id__c,Whoid,Whatid,Subject,Status__c,Opportunity__c from  Event where id = : eventId];
 
              return newEvent;
 
          }
          return null;
      }
-
-
     
     
     // Class to hold calendar event data

@@ -17,6 +17,10 @@
             <start>103.87.57.171</start>
         </ipRanges>
         <ipRanges>
+            <end>103.87.56.243</end>
+            <start>103.87.56.243</start>
+        </ipRanges>
+        <ipRanges>
             <end>103.87.56.190</end>
             <start>103.87.56.190</start>
         </ipRanges>

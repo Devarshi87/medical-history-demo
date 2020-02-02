@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ApexVcsIndex">
     <index-record>
-      <option name="path" value="/src/classes/AppointmentBookingController.cls" />
+      <option name="path" value="/src/components/newAppointmentPatientComp.component" />
       <option name="type" value="MODIFIED" />
     </index-record>
   </component>

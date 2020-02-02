@@ -1,237 +1,317 @@
 <apex:component controller="CalendarScheduleController">
-   
-    
-    <apex:attribute name="whoid" description="physicianid" type="String" required="true"/>
-    <apex:attribute name="whatid" description="patientid" type="String" required="true"/>
-    <apex:attribute name="subject" description="subject title" type="String" required="true"/>
-    
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"/>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.min.js"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.min.js"/>
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>-->
-    
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.min.css" rel="stylesheet" />
+
+
+<apex:attribute name="whoid" description="physicianid" type="String" required="true"/>
+<apex:attribute name="whatid" description="patientid" type="String" required="true"/>
+<apex:attribute name="subject" description="subject title" type="String" required="true"/>
+<apex:attribute name="opportunityId" description="related Opp" type="String"/>
+
+
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.min.js"/>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.min.js"/>-->
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.min.css" rel="stylesheet" />
 <!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/4.2.0/timegrid/main.min.css" rel="stylesheet" />-->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.print.css" rel="stylesheet" media="print"  />
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
-    
-    <script type="text/javascript"> 
-    
-    var relatedPhysicianid = '{!whoid}';
-    var relatedPatientID = '{!whatid}';
-    console.log(relatedPhysicianid +','+ relatedPatientID );
-    
-    /**
-         * This function will be called when the user
-         * select a duration from the calendar
-         * */
-    const handleSelect = function(start, end){
-        $('#createEventTitle').val("{!subject}");
-        $('#createStartTime').val(start);
-        $('#createEndTime').val(end);
-    }
-    
-    
-    
-    function getEventData() {                         
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.3.1/fullcalendar.print.css" rel="stylesheet" media="print"  />
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>
+
+<script type="text/javascript">
+
+var relatedPhysicianid = '{!whoid}';
+var relatedPatientID = '{!whatid}';
+var oppId = '{!opportunityId}';
+console.log(relatedPhysicianid +','+ relatedPatientID );
+
+/**
+     * This function will be called when the user
+     * select a duration from the calendar
+     * */
+const handleSelect = function(start, end){
+    $('#createEventTitle').val("{!subject}");
+    $('#createStartTime').val(start);
+    $('#createEndTime').val(end);
+}
+
+
+
+function getEventData() {
+    Visualforce.remoting.Manager.invokeAction(
+        '{!$RemoteAction.CalendarScheduleController.eventdata}',
+        relatedPhysicianid,
+        function(result, event){
+            if (event.status) {
+                //console.log(result);
+                evt =  JSON.parse(result);
+
+                createCalendar(evt);
+
+            } else if (event.type === 'exception') {
+                console.log(event.message);
+            } else {
+                console.log(event.message);
+            }
+        },
+        {escape: false}
+    );
+}
+
+/* Prepare an event object to pass to server side remote call
+     */
+const prepareEvent = function(title, startTime, endTime, Id){
+    const calendarEvent = {};
+    //calendarEvent.Id = Id;
+    calendarEvent.subject = title;
+    calendarEvent.StartDateTime = new Date(startTime).getTime();
+    calendarEvent.EndDateTime = new Date(endTime).getTime();
+    createOrUpdateEvents(JSON.stringify(calendarEvent));
+}
+
+
+function createOrUpdateEvents(calendarEvent){
+    //Invoking remote action
+    if(relatedPhysicianid !=null && relatedPatientID!=null){
         Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.CalendarScheduleController.eventdata}', 
-            relatedPhysicianid,
-            function(result, event){
-                if (event.status) {
-                    console.log(result);
-                    evt =  JSON.parse(result);
-                    
-                    createCalendar(evt);
-                    
-                } else if (event.type === 'exception') { 
-                    console.log(event.message);
-                } else {
-                    console.log(event.message);
-                }
-            }, 
-            {escape: false}
-        );
-    }
-    
-    /* Prepare an event object to pass to server side remote call
-         */
-    const prepareEvent = function(title, startTime, endTime, Id){
-        const calendarEvent = {};
-        //calendarEvent.Id = Id;
-        calendarEvent.subject = title;
-        calendarEvent.StartDateTime = new Date(startTime).getTime();
-        calendarEvent.EndDateTime = new Date(endTime).getTime();
-        createOrUpdateEvents(JSON.stringify(calendarEvent));
-    }
-    
-    
-    function createOrUpdateEvents(calendarEvent){
-        //Invoking remote action
-        
-        Visualforce.remoting.Manager.invokeAction(
-            '{!$RemoteAction.CalendarScheduleController.createOrUpdateEvents}',
-            calendarEvent,relatedPhysicianid,relatedPatientID,
-            function(result, event){
-                if (event.status) {
-                    //Call was successful, add events to calendar  
-                    // console.log(result.replace(/(&quot\;)/g,"\""));
-                    if(result.length > 0){
-                        
-                        var evtS =  JSON.parse(result.replace(/(&quot\;)/g,"\""));
-                        console.log(evtS.Id);
-                        // createCalendar(evtS);
-                        if(evtS.Id == null){
-                        	alert('Missing Patient or the Physician');
-                        }
-                        else{
-                            rerenderCalendarFunction(evtS.Id);
-                        }
-                        
-                    }
-                    else{
+        '{!$RemoteAction.CalendarScheduleController.createOrUpdateEvents}',
+        calendarEvent,relatedPhysicianid,relatedPatientID,oppId,
+        function(result, event){
+            if (event.status) {
+                //Call was successful, add events to calendar
+                // console.log(result.replace(/(&quot\;)/g,"\""));
+                if(result.length > 0){
+
+                    var evtS =  JSON.parse(result.replace(/(&quot\;)/g,"\""));
+                    //console.log(evtS.Id);
+                    // createCalendar(evtS);
+                    if(evtS.Id == null){
                         alert('Missing Patient or the Physician');
                     }
-                } else if (event.type === 'exception') {
-                    //Exception in remote call
-                    console.error(`${event.message} ${event.where}`);
-                } else {
-                    //Call was unsuccssful
-                    console.error(`${event.message}`);
+                    else{
+                        //console.log(evtS.Id);
+                        rerenderCalendarFunction(evtS.Id);
+                    }
+
                 }
-            }, 
-            {escape: true}
-        );
+                else{
+                    alert('Missing Patient or the Physician');
+                }
+            } else if (event.type === 'exception') {
+                //Exception in remote call
+                console.error(`${event.message} ${event.where}`);
+            } else {
+                //Call was unsuccssful
+                console.error(`${event.message}`);
+            }
+        },
+        {escape: true}
+    );
     }
-    
-    const handleEventClick = function(calendarEvent, browserEvent, view){
-        $('#updateEvent').dialog();
-        $('#updateEventTitle').val(calendarEvent.title);
-        $('#updateStartTime').val(calendarEvent.start);
-        $('#updateEndTime').val(calendarEvent.end);
-        $('#recordId').val(calendarEvent.Id);
-        
-	}
-    
-    function createCalendar(eventdata){
-        
-        $('#calendar').fullCalendar({  
-            //Toolbar header
-            header: {
-                left:   'prev,next today',
-                center: 'title',
-                right: 'agendaDay,agendaWeek,month'
-            },
-            
-            //Changing text for different buttons
-            buttonText :{
-                today:    'Today',
-                month:    'Month',
-                week:     'Week Agenda',
-                day:      'Day Agenda',
-                list:     'List',
-                prevYear: 'Previous Year',
-                nextYear: 'Next Year',
-                prev: 'Previous',
-                next: 'Next'
-            },
-            selectOverlap: false,
-            selectable:true,
-            select : function(start, end) {
-                //alert('a day has been clicked!');
-                if(start.isBefore(moment())) {
-                    
-                    $('#calendar').fullCalendar('unselect');
-                    
-                    return false;
-                }
-                var allDay = !start.hasTime() && !end.hasTime();
-                if(!allDay){
+    else{
+        alert('Missing Patient or the Physician');
+    }
+
+}
+
+const handleEventClick = function(calendarEvent, browserEvent, view){
+    $('#updateEvent').dialog();
+    $('#updateEventTitle').val(calendarEvent.title);
+    $('#updateStartTime').val(calendarEvent.start);
+    $('#updateEndTime').val(calendarEvent.end);
+    $('#recordId').val(calendarEvent.Id);
+
+}
+
+function createCalendar(eventdata){
+
+    $('#calendar').fullCalendar({
+        //Toolbar header
+        header: {
+            left:   'prev,next today',
+            center: 'title',
+            right: 'agendaDay,agendaWeek,month'
+        },
+
+        //Changing text for different buttons
+        buttonText :{
+            today:    'Today',
+            month:    'Month',
+            week:     'Week Agenda',
+            day:      'Day Agenda',
+            list:     'List',
+            prevYear: 'Previous Year',
+            nextYear: 'Next Year',
+            prev: 'Previous',
+            next: 'Next'
+        },
+        selectOverlap: false,
+        selectable:true,
+        select : function(start, end) {
+            //alert('a day has been clicked!');
+            if(start.isBefore(moment())) {
+
+                $('#calendar').fullCalendar('unselect');
+
+                return false;
+            }
+            var allDay = !start.hasTime() && !end.hasTime();
+            if(relatedPhysicianid !=null && relatedPatientID!=null){
+                if(!allDay ){
                     handleSelect(start, end);
                     $( "#dialog" ).dialog();
                 }
-                
-                
-            },
-            dayClick: function(date, jsEvent, view) {
-                
-                $('#calendar').fullCalendar('gotoDate',date);
-                $('#calendar').fullCalendar('changeView','agendaDay');
-                
-            },
-            
-            //Handle event click
-            eventClick : function(calendarEvent, browserEvent, view){
-                handleEventClick(calendarEvent, browserEvent, view);
-            },
-            events: eventdata,
-            timezone: 'GMT'
-        }) ;
-    }
-    
-    $(document).ready(function() {
-        
-        
-        getEventData();
-        $( "#createStartTime,#createEndTime" ).datepicker();
-        
-        $('[id$=create-event]').click(function(event){
-            const title = $('#createEventTitle').val();
-            const startTime = $('#createStartTime').val();
-            const endTime = $('#createEndTime').val();
-            if(new Date(startTime).getTime() > new Date(endTime).getTime()){
-                $("#createStartTime").after('<span style="color:red"><br>Start time must be before End time</span>');
+            }else{
+                alert('Missing Patient or the Physician');
             }
-            prepareEvent(title, startTime, endTime);
-            $("#dialog").dialog( "close" );
-            
-        });
-        
+
+
+
+        },
+        dayClick: function(date, jsEvent, view) {
+
+            $('#calendar').fullCalendar('gotoDate',date);
+            $('#calendar').fullCalendar('changeView','agendaDay');
+
+        },
+
+        //Handle event click
+        eventClick : function(calendarEvent, browserEvent, view){
+            //console.log(calendarEvent);
+            $('#updateEvent').dialog();
+            viewCalendarFunction(calendarEvent.eventid);
+            //handleEventClick(calendarEvent, browserEvent, view);
+        },
+        events: eventdata,
+        timezone: 'GMT'
+    }) ;
+}
+
+$(document).ready(function() {
+
+
+    getEventData();
+    $( "#createStartTime,#createEndTime" ).datepicker();
+
+    $('[id$=create-event]').click(function(event){
+        const title = $('#createEventTitle').val();
+        const startTime = $('#createStartTime').val();
+        const endTime = $('#createEndTime').val();
+        if(new Date(startTime).getTime() > new Date(endTime).getTime()){
+            $("#createStartTime").after('<span style="color:red"><br>Start time must be before End time</span>');
+        }
+        prepareEvent(title, startTime, endTime);
+        $("#dialog").dialog( "close" );
+
     });
-    </script>
-    <div id="calendar"></div>
-    
-    <div id='updateEvent' style="width:30%; padding:20px; float:right; display:none" title="View Event">
-        
-        
-        <table>
-            <tr>
-                <td>Event Title</td><td><output type="text" id="updateEventTitle" style="margin:5px"/></td>
-            </tr>
-            <tr>
-                <td>Start Time</td><td><output type="text" id="updateStartTime" style="margin:5px"/></td>
-            </tr>
-            <tr>
-                <td>End Time</td><td><output type="text" id="updateEndTime" style="margin:5px"/></td>
-            </tr>
-            <tr>
-                <td><input type="hidden" id="recordId" name="recordId" /></td>
-                
-            </tr>
-        </table>
-        
-    </div>
-    
-    <div id="dialog" title="Create New Event" style="display:none;backgroun-color:whitesmoke;" class="slds-box">
-        
-        <table>
-            <tr>
-                <td>Event Title</td><td><input type="text" id="createEventTitle" style="margin:5px"/></td>
-            </tr>
-            <tr>
-                <td>Start Time</td><td><input type="text" id="createStartTime" style="margin:5px"/></td>
-            </tr>
-            <tr>
-                <td>End Time</td><td><input type="text" id="createEndTime" style="margin:5px"/></td>
-            </tr>
-            <tr>
-                <td></td><td><apex:commandbutton id="create-event" value="Create Event" style="margin:5px" styleclass="close-modal slds-button slds-button_brand"/></td>
-            </tr>
-        </table>
-        
-        
-    </div>
+
+});
+function cancelEvent(et){
+    $('#updateEvent').dialog("close");
+    cancelCalendarFunction(et);
+}
+
+</script>
+<div id="calendar"></div>
+
+<div id='updateEvent' style="width:30%; padding:2px; float:right; display:none" title="View Event">
+
+
+<!--        <table>-->
+<!--            <tr>-->
+<!--                <td>Event Title</td><td><output type="text" id="updateEventTitle" style="margin:5px"/></td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td>Start Time</td><td><output type="text" id="updateStartTime" style="margin:5px"/></td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td>End Time</td><td><output type="text" id="updateEndTime" style="margin:5px"/></td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td><input type="hidden" id="recordId" name="recordId" /></td>-->
+<!--                -->
+<!--            </tr>-->
+<!--        </table>-->
+<apex:outputPanel id="view-event">
+    <apex:outputPanel rendered="{!EventObjCal.id !=null}">
+
+        <div class="slds-box slds-m-around--x-small slds-wrap">
+            <!--                                                            <ul class="slds-has-dividers_around-space slds-m-around&#45;&#45;x-small">-->
+
+            <article class="slds-tile slds-tile_board">
+                <h3 class="slds-tile__title slds-truncate" title="{!EventObjCal.Subject}">
+                    <a href="/{!EventObjCal.Id}" target="_blank">Subject: &nbsp;&nbsp;{!EventObjCal.Subject}</a>
+                </h3>
+                <div class="slds-tile__detail">
+                    <p class="slds-text-heading_medium" title="Start">Start: &nbsp;&nbsp;
+                        <apex:outputText value="{0, date,EEE, d MMM yyyy hh:mm aaa}">
+                            <apex:param value="{!EventObjCal.StartDateTime}" />
+                        </apex:outputText>
+                        <!--                                                                                <apex:outputField value="{!EventObj.StartDateTime}"/>-->
+                    </p>
+                    <p class="slds-truncate" title="Physician">
+                        Physician: &nbsp;&nbsp;   <apex:outputField value="{!EventObjCal.WhoId}"/>
+                    </p>
+                    <p class="slds-truncate" title="Patient">
+                        Patient: &nbsp;&nbsp;  <apex:outputField value="{!EventObjCal.WhatId}"/>
+                    </p>
+                    <p class="slds-truncate" title="End">End: &nbsp;&nbsp;
+                        <apex:outputText value="{0, date, EEE, d MMM yyyy hh:mm aaa}">
+                            <apex:param value="{!EventObjCal.EndDateTime}" />
+                        </apex:outputText>
+                        <!--                                                                                <apex:outputField value="{!EventObj.EndDateTime}"/>-->
+                    </p>
+                    <p class="slds-truncate" title="Status">Status: &nbsp;&nbsp;
+                        <apex:outputText value="{!EventObjCal.Status__c}"/>
+
+                        <!--                                                                                <apex:outputField value="{!EventObj.EndDateTime}"/>-->
+                    </p>
+                </div>
+            </article>
+
+                <apex:commandButton value="Cancel Calendar Event" onclick="cancelEvent('{!EventObjCal.Id}')" reRender="view-event" styleclass="app-btn slds-button slds-button_brand" />
+
+
+
+        </div>
+    </apex:outputPanel>
+</apex:outputPanel>
+
+    <apex:actionstatus id="statusCaldia">
+        <apex:facet name="start">
+            <div class="waitingSearchDiv" id="el_loading" style="background-color: #fbfbfb; height:90%;opacity:0.65;width:90%;">
+                <div class="waitingHolder" style="top: 100px; width: 100px;">
+
+                    <lottie-player
+                            src="https://assets4.lottiefiles.com/datafiles/nT4vnUFY9yay7QI/data.json"  background="transparent"  speed="1"  style="width: 100px; height: 100px;"  loop="true"  autoplay="true" >
+                    </lottie-player>
+                </div>
+            </div>
+        </apex:facet>
+    </apex:actionstatus>
+
+</div>
+<apex:actionFunction name="viewCalendarFunction" reRender="view-event" status="statusCaldia">
+    <apex:param name="viewEvent" value=""/>
+</apex:actionFunction>
+
+<div id="dialog" title="Create New Event" style="display:none;backgroun-color:whitesmoke;" class="slds-box">
+
+    <table>
+        <tr>
+            <td>Event Title</td><td><input type="text" id="createEventTitle" style="margin:5px"/></td>
+        </tr>
+        <tr>
+            <td>Start Time</td><td><input type="text" id="createStartTime" style="margin:5px"/></td>
+        </tr>
+        <tr>
+            <td>End Time</td><td><input type="text" id="createEndTime" style="margin:5px"/></td>
+        </tr>
+        <tr>
+            <td></td><td><apex:commandbutton id="create-event" value="Create Event" style="margin:5px" styleclass="close-modal slds-button slds-button_brand" status="statusCal"/></td>
+        </tr>
+    </table>
+
+
+</div>
 
 </apex:component>

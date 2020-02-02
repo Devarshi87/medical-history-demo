@@ -109,7 +109,8 @@ public class CalendarInvitationUtility {
 
 				eventObj.Google_Cal_Event_Id__c = (String)event_res.get('id');
 				update eventObj;
-			}else{
+			}
+			else{
 				String errorMessage = 'Unexpected Error while communicating with Google Calendar API. '
 						+'Status '+HttpRes.getStatus()+' and Status Code '+HttpRes.getStatuscode();
 				ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,errorMessage));
@@ -119,13 +120,76 @@ public class CalendarInvitationUtility {
 		}
 	}
 
-	public static void deleteCalendarEvent(Contact googleContInfo, Event eventObj){
+	public static Contact doRefreshToken(Contact physician){
+
+		GoogleSetting__c gc = GoogleSetting__c.getInstance('00e2v000004VDEQ');
+		if (gc != null) {
+
+		String errorMessage ='';
+		Contact googleInfoToken = physician;
+		Http http = new Http();
+		HttpRequest httpReq = new HttpRequest();
+		HttpResponse httpRes = new HttpResponse();
+		httpReq.setEndpoint('https://www.googleapis.com/oauth2/v4/token');
+		httpReq.setMethod('POST');
+		httpReq.setHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+
+		String refreshToken;
+		if(googleInfoToken!=null)
+			refreshToken = googleInfoToken.Refresh_Token__c;
+
+		System.debug('#### refreshToken '+refreshToken);
+		String refreshTokenBody = 'client_id='+gc.ConsumerKey__c+'&client_secret='+gc.ClientSecret__c+'&refresh_token='+refreshToken
+				+'&grant_type=refresh_token';
+		System.debug('#### refreshTokenBody '+refreshTokenBody);
+
+		httpReq.setBody(refreshTokenBody);
+
+		try{
+			httpRes = http.send(httpReq);
+			if(httpRes.getStatusCode() == 200){
+				Map<String,object> TokenInfo = (Map<String,object>)JSON.deserializeUntyped(httpRes.getBody());
+
+				googleInfoToken.access_token__c = String.valueOf(TokenInfo.get('access_token'));
+				googleInfoToken.Expire_In__c = Double.valueOf(TokenInfo.get('expires_in'));
+				 googleInfoToken.Token_update_time__c = System.now();
+				//googleSettingInfo.Refresh_Token__c = String.valueOf(TokenInfo.get('refresh_token'));
+				System.debug('do Refresh Token '+googleInfoToken);
+				//update googleInfoToken;
+
+				return googleInfoToken;
+			}else{
+				errorMessage = 'Unexpected Error while communicating with Google Calendar API. '
+						+'Status '+httpRes.getStatus()+' and Status Code '+httpRes.getStatuscode();
+			}
+			return googleInfoToken;
+		}catch(System.Exception e){
+
+			System.debug('#### Exception Executed '+e.getStackTraceString() + ' '+e.getMessage());
+			if(String.valueOf(e.getMessage()).startsWith('Unauthorized endpoint')){
+				errorMessage = 'Unauthorize endpoint: An Administer must go to Setup -> Administer -> Security Control ->'
+						+' Remote Site Setting and add '+' '+ 'https://www.googleapis.com/oauth2/v4/token' +' Endpoint';
+			}else{
+				errorMessage = 'Unexpected Error while communicating with Google Calendar API. '
+						+'Status '+httpRes.getStatus()+' and Status Code '+httpRes.getStatuscode();
+			}
+
+			return physician;
+		}
+
+
+		}
+		return physician;
+	}
+
+	public static void deleteCalendarEvent(Contact googleContInfo, String gcalid){
 
 		String accessToken = googleContInfo.Access_Token__c;
 		Http http = new Http();
 		HttpRequest httpReq = new HttpRequest();
 		HttpResponse HttpRes = new HttpResponse();
-		String deleteEventEndpoint = 'https://www.googleapis.com/calendar/v3/calendars/'+eventObj.Google_Cal_Event_Id__c;
+		String deleteEventEndpoint = 'https://www.googleapis.com/calendar/v3/calendars/primary/events/'+gcalid;
 		httpReq.setEndpoint(deleteEventEndpoint);
 		httpReq.setMethod('DELETE');
 
@@ -139,8 +203,8 @@ public class CalendarInvitationUtility {
 								HttpRes.getBody()));
 				Map<String,object> event_res = (Map<String,object>)JSON.deserializeUntyped(HttpRes.getBody());
 
-				//eventObj.Google_Cal_Event_Id__c = (String)event_res.get('id');
-				//update eventObj;
+//				eventObj.Google_Cal_Event_Id__c = (String)event_res.get('id');
+//				update eventObj;
 			}else{
 				String errorMessage = 'Unexpected Error while communicating with Google Calendar API. '
 						+'Status '+HttpRes.getStatus()+' and Status Code '+HttpRes.getStatuscode();

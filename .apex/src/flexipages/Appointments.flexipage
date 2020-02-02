@@ -4,11 +4,10 @@
         <componentInstances>
             <componentInstanceProperties>
                 <name>height</name>
-                <value>600</value>
+                <value>650</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>label</name>
-                <value>Appointment Scheduler</value>
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>pageName</name>
@@ -16,14 +15,14 @@
             </componentInstanceProperties>
             <componentInstanceProperties>
                 <name>showLabel</name>
-                <value>true</value>
+                <value>false</value>
             </componentInstanceProperties>
             <componentName>flexipage:visualforcePage</componentName>
         </componentInstances>
         <name>main</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>Appointments</masterLabel>
+    <masterLabel>Appointment Scheduler</masterLabel>
     <template>
         <name>flexipage:defaultAppHomeTemplate</name>
     </template>

@@ -528,6 +528,14 @@
         <trackFeedHistory>false</trackFeedHistory>
     </fields>
     <fields>
+        <fullName>Token_update_time__c</fullName>
+        <externalId>false</externalId>
+        <label>Token_update_time</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <type>DateTime</type>
+    </fields>
+    <fields>
         <fullName>Total_Amount_Donated__c</fullName>
         <externalId>false</externalId>
         <label>Total Amount Donated</label>
@@ -546,6 +554,14 @@
         <trackFeedHistory>false</trackFeedHistory>
         <type>Text</type>
         <unique>true</unique>
+    </fields>
+    <fields>
+        <fullName>token_expired__c</fullName>
+        <externalId>false</externalId>
+        <formula>OR((ISNULL(Token_update_time__c)),AND(NOT(ISNULL(Token_update_time__c)),(NOW()-Token_update_time__c)*24*60*60 &gt;  Expire_In__c))</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>token_expired</label>
+        <type>Checkbox</type>
     </fields>
     <listViews>
         <fullName>AllContacts</fullName>

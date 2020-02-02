@@ -1,10 +1,14 @@
 <apex:page lightningStylesheets="true" controller="AppointmentBookingController" showHeader="false">
     <apex:slds />
-    
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"/>
+    <!-- jQuery Modal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <style>
         .app-btn{
         top: 10px;
-        bottom: 10px;
+        margin-bottom: 10px!important;
         width: 100%;
         
         }
@@ -15,8 +19,24 @@
         console.log('14564654' );
         rerenderPrice();
     }
+
+
+    function viewPatientHistory(){
+        $("#eventHistory").modal({
+               fadeDuration: 100,
+                closeClass: 'closehistroy',
+            });
+
+    }
+
+    function openEventMod(){
+     $("#eventCreated").modal({
+               fadeDuration: 100,
+                closeClass: 'closehistroy',
+            });
+    }
     </script>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+
     <div class="slds-scope">
         
         <apex:form >
@@ -24,6 +44,7 @@
                 
                 <div class="slds-grid slds-wrap">
                     <!--left Panel-->
+
                     <div class="slds-col slds-small-size--1-of-2">
                         <apex:actionFunction name="selectMode" reRender="select-mode" status="statusCal">
                             <apex:param name="mode" assignTo="{!patientType}" value=""/>
@@ -50,8 +71,9 @@
                                 <div class="slds-box slds-m-around--x-small">
                                     
                                     <c:newAppointmentPatientComp newPatient="{!newPatientObj}" id="patient-info"/>
-                                    <apex:commandButton value="Save" action="{!saveAction}" styleclass="app-btn slds-button slds-button_brand" rerender="select-mode,patient-info,product-panel" status="statusCal"/>
-                                    
+                                    <apex:commandButton value="Save" action="{!saveAction}" rendered="{!newPatientObj.id==null}" styleclass="app-btn slds-button slds-button_brand" rerender="select-mode,patient-info,product-panel,patient-history" status="statusCal"/>
+                                    <apex:commandButton value="View Patient History" onclick="viewPatientHistory();" reRender="patient-history" rendered="{!newPatientObj.id!=null}" styleclass="app-btn slds-button slds-button_brand" status="statusCal"/>
+
                                 </div>
                             </apex:outputPanel>
                             
@@ -65,19 +87,18 @@
                                                 <div class="slds-align_absolute-center">
                                                     <apex:inputText value="{!searchEmailString}" html-placeholder="Enter Patient Email" styleclass="slds-input"/>
                                                 </div>  
-                                                <apex:commandButton value="Search Patient" action="{!searchPatient}" styleclass="app-btn slds-button slds-button_brand" rerender="select-mode,patient-info,product-panel" status="statusCal"/>
+                                                <apex:commandButton value="Search Patient" action="{!searchPatient}" styleclass="app-btn slds-button slds-button_brand" rerender="select-mode,patient-info,product-panel,patient-history" status="statusCal"/>
                                                 
                                             </div>
                                         </div>
                                     </span>
                                     
                                 </div>
+
                             </apex:outputPanel>
                         </apex:outputPanel>
 
-                        <apex:outputPanel id="patient-history">
 
-                        </apex:outputPanel>
                         
                         <apex:outputPanel id="product-panel">
                             
@@ -135,12 +156,12 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="slds-col slds-small-size--1-of-2">
+                                            <div class="modal" id="eventCreated">
 
 
                                                     <apex:outputPanel id="event-panel">
                                                         <apex:outputPanel rendered="{!EventObj.id !=null}">
-                                                            <apex:pageMessages />
+
                                                             <div class="slds-box slds-m-around--x-small">
 <!--                                                            <ul class="slds-has-dividers_around-space slds-m-around&#45;&#45;x-small">-->
 
@@ -169,14 +190,10 @@
                                                                             </p>
                                                                         </div>
                                                                     </article>
-                                                        <apex:commandButton value="Send Calendar Invites" onclick="sendcalendarinvite();" styleclass="app-btn slds-button slds-button_brand" status="statusCal"/>
+                                                        <apex:commandButton value="Send Calendar Invites" onclick="sendcalendarinvite();" reRender="calendarPanel" styleclass="app-btn slds-button slds-button_brand" />
 
 <!--                                                            </ul>-->
-                                                            <!--                            <apex:outputField value="{!EventObj.Subject}"/>-->
-                                                            <!--                            <apex:outputField value="{!EventObj.StartDateTime}"/>-->
-                                                            <!--                            <apex:outputField value="{!EventObj.EndDateTime}"/>-->
-                                                            <!--                            <apex:outputField value="{!EventObj.WhoId}"/>-->
-                                                            <!--                            <apex:outputField value="{!EventObj.WhatId}"/>-->
+
                                                             </div>
                                                         </apex:outputPanel>
                                                     </apex:outputPanel>
@@ -184,18 +201,25 @@
 
                                         </div>
 
-                                    <apex:actionFunction name="sendcalendarinvite" action="{!sendCalendarInvite}" rerender="" status="statusCal"/>
-                                    <apex:actionFunction name="rerenderCalendarFunction" reRender="calendarPanel,event-panel" status="statusCal">
+                                    <apex:actionFunction name="sendcalendarinvite" action="{!sendCalendarInvite}" rerender="calendarPanel" status="statusCal" oncomplete="$.modal.close();"/>
+                                    <apex:actionFunction name="rerenderCalendarFunction" rerender="event-panel" status="statusCal" oncomplete="openEventMod();">
                                         <apex:param name="createdEventId" value=""/>
                                     </apex:actionFunction>
+
+
                                     
                                     <apex:actionFunction name="updatePhysician" rerender="product-panel,calendarPanel" status="statusCal"/>
 <!--                                    {!newOppObj.Assigned_Physician__c}-->
                                 </div>
+
+                                <apex:commandButton value="Press to Start Again!" onclick="window.reload();" styleclass="app-btn slds-button slds-button_brand" rendered="{!newPatientObj.id!=null}"/>
                             </apex:outputPanel>
                             
                         </apex:outputPanel>
 
+                        <apex:actionFunction name="cancelCalendarFunction" action="{!deleteCaleEvent}" reRender="calendarPanel,patient-history" status="statusCal">
+                            <apex:param name="cancelEvent" value=""/>
+                        </apex:actionFunction>
 
                     </div>
                     <!--left Panel end-->
@@ -208,7 +232,11 @@
                                 <div style="font-size: 18px;test-align:center;">
                                     <apex:outputField value="{!newOppObj.Assigned_Physician__c}"/> &nbsp;&nbsp; Calendar Schedule
                                 </div>
-                                <c:checkCalendarScheduleComp whatid="{!newPatientObj.id}" whoid="{!newOppObj.Assigned_Physician__c}" subject="Appointment for {!newPatientObj.Name }"/>
+                                <c:checkCalendarScheduleComp whatid="{!newPatientObj.id}"
+                                                             whoid="{!newOppObj.Assigned_Physician__c}"
+                                                             subject="Appointment for {!newPatientObj.Name }"
+                                                             opportunityId="{!newOppObj.id}"
+                                />
                             </apex:outputPanel>
                             
                         </div>
@@ -232,6 +260,15 @@
                     </div>
                 </apex:facet>
             </apex:actionstatus>
+
+            <apex:outputPanel id="patient-history">
+                <div id="eventHistory"  class="modal">
+                    <c:eventHistoryComponent eventList="{!patientEventhistory}" />
+                </div>
+            </apex:outputPanel>
+
+
+
         </apex:form>
         
         

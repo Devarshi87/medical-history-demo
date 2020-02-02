@@ -1,5 +1,9 @@
 <apex:component >
-    
+
+
+    <script>
+
+    </script>
     <apex:attribute name="newPatient" description="patient for appointment" type="Patient__c" />
     
     

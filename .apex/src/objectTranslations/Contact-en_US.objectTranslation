@@ -330,12 +330,20 @@
         <relationshipLabel><!-- Physicians --></relationshipLabel>
     </fields>
     <fields>
+        <label><!-- Token_update_time --></label>
+        <name>Token_update_time__c</name>
+    </fields>
+    <fields>
         <label><!-- Total Amount Donated --></label>
         <name>Total_Amount_Donated__c</name>
     </fields>
     <fields>
         <label><!-- access token --></label>
         <name>access_token__c</name>
+    </fields>
+    <fields>
+        <label><!-- token_expired --></label>
+        <name>token_expired__c</name>
     </fields>
     <startsWith>Consonant</startsWith>
 </CustomObjectTranslation>

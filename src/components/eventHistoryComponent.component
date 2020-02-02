@@ -1,4 +1,56 @@
 <apex:component >
+    <script>
+        function cancelEvent(et){
+             $.modal.close();
+            cancelCalendarFunction(et);
 
-    <apex:attribute name="opphistoryList" description="list of upcoming opps" type="Opportunity[]"/>
+        }
+    </script>
+    <apex:attribute name="eventList" description="list of upcoming opps" type="Event[]" />
+
+    <div>
+        <ul class="slds-has-dividers_around-space slds-m-around&#45;&#45;x-small">
+        <apex:repeat value="{!eventList}" var="ev">
+
+                <li class="slds-item">
+                <article class="slds-tile slds-tile_board">
+                    <h3 class="slds-tile__title slds-truncate" title="{!ev.Subject}">
+                        <a href="javascript:void(0);">Subject: &nbsp;&nbsp;{!ev.Subject}</a>
+                    </h3>
+                    <div class="slds-tile__detail">
+                        <p class="slds-text-heading_medium" title="Start">Start: &nbsp;&nbsp;
+                            <apex:outputText value="{0, date,EEE, d MMM yyyy hh:mm aaa}">
+                                <apex:param value="{!ev.StartDateTime}" />
+                            </apex:outputText>
+                            <!--                                                                                <apex:outputField value="{!EventObj.StartDateTime}"/>-->
+                        </p>
+                        <p class="slds-truncate" title="Physician">
+                            Physician: &nbsp;&nbsp;   <apex:outputField value="{!ev.WhoId}"/>
+                        </p>
+                        <p class="slds-truncate" title="Patient">
+                            Patient: &nbsp;&nbsp;  <apex:outputField value="{!ev.WhatId}"/>
+                        </p>
+                        <p class="slds-truncate" title="End">End: &nbsp;&nbsp;
+                            <apex:outputText value="{0, date, EEE, d MMM yyyy hh:mm aaa}">
+                                <apex:param value="{!ev.EndDateTime}" />
+                            </apex:outputText>
+                            <!--                                                                                <apex:outputField value="{!EventObj.EndDateTime}"/>-->
+                        </p>
+                        <p class="slds-truncate" title="Status">Status: &nbsp;&nbsp;
+                            <apex:outputText value="{!ev.Status__c}"/>
+
+                            <!--                                                                                <apex:outputField value="{!EventObj.EndDateTime}"/>-->
+                        </p>
+                    </div>
+
+                    <apex:commandButton value="Cancel Calendar Event" html-rel="modal:close"  onclick="cancelEvent('{!ev.Id}');return false;" reRender="patient-history" styleclass="app-btn slds-button slds-button_brand closehistroy" />
+                </article>
+
+                </li>
+
+
+
+        </apex:repeat>
+        </ul>
+    </div>
 </apex:component>

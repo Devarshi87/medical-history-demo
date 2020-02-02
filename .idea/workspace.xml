@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c24f4a53-5d61-4151-b06a-21b28ee669f6" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/classes/AppointmentBookingController.cls" beforeDir="false" afterPath="$PROJECT_DIR$/src/classes/AppointmentBookingController.cls" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/newAppointmentPatientComp.component" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/newAppointmentPatientComp.component" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -71,6 +71,16 @@
           <url>file://$PROJECT_DIR$/src/classes/GoogleCalendarActionsController.cls</url>
           <line>35</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Apex">
+          <url>file://$PROJECT_DIR$/src/classes/CalendarInvitationUtility.cls</url>
+          <line>122</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="Apex">
+          <url>file://$PROJECT_DIR$/src/classes/CalendarInvitationUtility.cls</url>
+          <line>52</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

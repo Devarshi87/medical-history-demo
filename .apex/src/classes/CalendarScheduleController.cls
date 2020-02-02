@@ -15,10 +15,10 @@ public class CalendarScheduleController {
         calEvent[] events = new calEvent[]{};
             List<Event> eventList = new List<Event>();
         if(relatedPhysicianid!=null && relatedPhysicianid !=''){
-            eventList = [select Id, Subject, isAllDayEvent,Google_Cal_Event_Id__c, StartDateTime, EndDateTime from Event where EndDate > today and whoid=:relatedPhysicianid];
+            eventList = [select Id, Subject, isAllDayEvent,Google_Cal_Event_Id__c, StartDateTime,Opportunity__c, EndDateTime from Event where EndDate > today and whoid=:relatedPhysicianid];
         }
         else{
-            eventList = [select Id, Subject, isAllDayEvent,Google_Cal_Event_Id__c, StartDateTime, EndDateTime from Event where EndDate > today and whoid!=null and whatid!=null];
+            eventList = [select Id, Subject, isAllDayEvent,Google_Cal_Event_Id__c, StartDateTime,Opportunity__c, EndDateTime from Event where EndDate > today and whoid!=null and whatid!=null];
             
         }
         for(Event evnt: eventList){
@@ -26,6 +26,7 @@ public class CalendarScheduleController {
             DateTime endDT = evnt.EndDateTime;
             system.debug('===evnt.StartDateTime==>'+evnt.StartDateTime+'==startDT===?'+startDT);
             calEvent myEvent = new calEvent();
+            myEvent.eventid = evnt.Id;
             myEvent.title = evnt.Subject;
             myEvent.allDay = evnt.isAllDayEvent;
             myEvent.startString = startDT.format(dtFormat);
@@ -46,7 +47,7 @@ public class CalendarScheduleController {
     }
     
     @RemoteAction
-    public static String createOrUpdateEvents(String calendarEvent, string relatedPhysicianid, String relatedPatientID) {
+    public static String createOrUpdateEvents(String calendarEvent, string relatedPhysicianid, String relatedPatientID,String oppId) {
         
         Event eventObject = ((Event) JSON.deserialize(calendarEvent, Event.class));
         if(!String.isBlank(relatedPhysicianid) && !String.isBlank(relatedPatientID)){
@@ -55,6 +56,8 @@ public class CalendarScheduleController {
             system.debug('eventObjt===>' + eventObject);
             eventObject.whoid = relatedPhysicianid;
             eventObject.whatid = relatedPatientID;
+            eventObject.Opportunity__c = oppId;
+            eventObject.Status__c = 'Upcoming';
             upsert eventObject;
             system.debug('eventObjt=after==>' + eventObject);
             
@@ -63,11 +66,26 @@ public class CalendarScheduleController {
             return JSON.serialize(eventObject);
         
     }
+
+     public Event getEventObjCal(){
+         String eventId = ApexPages.currentPage().getParameters().get('viewEvent');
+
+         if(!String.isBlank(eventId)){
+             newEvent = new Event();
+             newEvent = [Select Id,StartDateTime,EndDateTime,Google_Cal_Event_Id__c,Whoid,Whatid,Subject,Status__c from  Event where id = : eventId];
+
+             return newEvent;
+
+         }
+         return null;
+     }
+
+
     
     
     // Class to hold calendar event data
     public class calEvent {
-
+        public String eventid{get;set;}
         public String title {get;set;}
         public Boolean allDay {get;set;}
         public String startString {get;set;}

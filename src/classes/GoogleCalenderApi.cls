@@ -76,7 +76,7 @@ public class GoogleCalenderApi {
                         googleSettingInfo.Access_Token__c = String.valueOf(TokenInfo.get('access_token'));
                         googleSettingInfo.Expire_In__c = Double.valueOf(TokenInfo.get('expires_in'));
                         googleSettingInfo.Refresh_Token__c = String.valueOf(TokenInfo.get('refresh_token'));
-                        
+                        googleSettingInfo.Token_update_time__c = System.now();
                         
                         update googleSettingInfo;
 
@@ -143,55 +143,7 @@ public class GoogleCalenderApi {
         return null;
     }
     
-   /* public static void doRefreshToken(){
-        
-        String errorMessage ='';
-        Contact googleInfoToken = fetchContactToken();
-        Http http = new Http();
-        HttpRequest httpReq = new HttpRequest();
-        HttpResponse httpRes = new HttpResponse();
-        httpReq.setEndpoint('https://www.googleapis.com/oauth2/v4/token');
-        httpReq.setMethod('POST');
-        httpReq.setHeader('Content-Type', 'application/x-www-form-urlencoded');
-        
-        
-        String refreshToken;
-        if(googleInfoToken!=null)
-            refreshToken = googleInfoToken.Refresh_Token__c;
-        
-        System.debug('#### refreshToken '+refreshToken);
-        String refreshTokenBody = 'client_id='+consumerKey+'&client_secret='+clientSecret+'&refresh_token='+refreshToken
-            +'&grant_type=refresh_token';
-        System.debug('#### refreshTokenBody '+refreshTokenBody);
-        
-        httpReq.setBody(refreshTokenBody);
-        
-        try{
-            httpRes = http.send(httpReq); 
-            if(httpRes.getStatusCode() == 200){
-                Map<String,object> TokenInfo = (Map<String,object>)JSON.deserializeUntyped(httpRes.getBody());
-                Contact googleSettingInfo = fetchContactToken();
-                googleSettingInfo.access_token__c = String.valueOf(TokenInfo.get('access_token'));
-                googleSettingInfo.Expire_In__c = Double.valueOf(TokenInfo.get('expires_in'));
-                //googleSettingInfo.Refresh_Token__c = String.valueOf(TokenInfo.get('refresh_token'));
-                System.debug('do Refresh Token '+googleSettingInfo);
-                update googleSettingInfo;
-            }else{
-                errorMessage = 'Unexpected Error while communicating with Google Calendar API. '
-                    +'Status '+httpRes.getStatus()+' and Status Code '+httpRes.getStatuscode();
-            }
-        }catch(System.Exception e){
-            
-            System.debug('#### Exception Executed '+e.getStackTraceString() + ' '+e.getMessage());
-            if(String.valueOf(e.getMessage()).startsWith('Unauthorized endpoint')){
-                errorMessage = 'Unauthorize endpoint: An Administer must go to Setup -> Administer -> Security Control ->'
-                    +' Remote Site Setting and add '+' '+ 'https://www.googleapis.com/oauth2/v4/token' +' Endpoint';
-            }else{
-                errorMessage = 'Unexpected Error while communicating with Google Calendar API. '
-                    +'Status '+httpRes.getStatus()+' and Status Code '+httpRes.getStatuscode();
-            }
-        }
-    }*/
+
     
     public static Contact fetchContactToken(String emailStr){
        
