@@ -9,7 +9,7 @@ public class GoogleCalenderApi {
     
     public static String googleoAuthUrl='https://accounts.google.com/o/oauth2/auth?'; 
     // Your redirect URI here that you entered while creating the App in Google API console
-    public static String redirect_uri = 'https://medical-demo-developer-edition.ap15.force.com/GoogleCalenderoAuth';
+    public static String redirect_uri = 'YOUR FORCE.COM DOMAIN/GoogleCalenderoAuth';
     //'https://medical-demo-developer-edition.ap15.force.com/GoogleCalenderoAuth?conId=0032v00003OfRoT'; 
     
     public static String calendar_Scope = 'https://www.googleapis.com/auth/calendar.events+https://www.googleapis.com/auth/userinfo.email'; 
