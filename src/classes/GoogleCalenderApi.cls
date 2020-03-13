@@ -1,11 +1,11 @@
 public class GoogleCalenderApi {
     
     public static Boolean AuthorizationSucces { get; set; }
-    
+    //use local variables in case of quick development and testing, otherwise create a custom setting to store the credentials
     // Your CLient ID Here
-    public Final static String consumerKey='717895365078-k5d9oj0q274fk7pmr7gei1bp7pqhjccd.apps.googleusercontent.com'; 
+    public Final static String consumerKey='YOUR CONSUMER KEY'; 
     // Your Client Secret Here
-    public Final static String clientSecret= 'HycyI76jFddDHtts51L6kxiR';
+    public Final static String clientSecret= 'YOUR SECRET ID';
     
     public static String googleoAuthUrl='https://accounts.google.com/o/oauth2/auth?'; 
     // Your redirect URI here that you entered while creating the App in Google API console
